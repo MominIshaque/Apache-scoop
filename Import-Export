@@ -1,9 +1,42 @@
+RAISE A TICKET FOR FOLLOWING 
+
+-----*** Install database to import data ***-----
+
+$ sudo apt-get install mysql-server -y
+
+-----*** Download sample database ***-----
+
+$ wget http://www.mysqltutorial.org/wp-content/uploads/2018/03/mysqlsampledatabase.zip
+$ sudo apt install zip -y
+$ unzip mysqlsampledatabase.zip
+
+-----*** Load sample data to database ***-----
+
+$ sudo mysql -u root <mysqlsampledatabase.sql
+$ sudo mysql -u root
+$ mysql>show databases;
+
+### Change bind address of database
+
+$ cd /etc/mysql/mysql.conf.d/
+$ sudo nano mysqld.cnf
+bind address = <private-ip of db>
+$ sudo service mysql restart
+
+-----*** Create a user for sqoop ***-----
+
+mysql>create user 'sqoopuser'@'%' identified by 'password';
+mysql>grant all privileges on *.* to 'sqoopuser'@'%';
+
+
 -----*** Sqoop ***-----
 
 ### Log in to one of the datanodes
+
 $ sqoop help
 
 ### Install driver
+
 $ wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j_8.0.32-
 1ubuntu20.04_all.deb
 
@@ -11,6 +44,7 @@ $ sudo dpkg -i mysql-connector-j_8.0.32-1ubuntu20.04_all.deb
 
 
 ### Check connection to database
+
 $ sqoop list-databases --connect jdbc:mysql://<database_dns>:3306/ --username sqoopuser -P
 $ sqoop list-tables --connect jdbc:mysql://<database_dns>:3306/classicmodels --username
 sqoopuser -P
